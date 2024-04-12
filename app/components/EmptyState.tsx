@@ -8,7 +8,7 @@ const EmptyState = () => {
   lg:px-8
   h-full
   flex
-  justify-content
+  justify-center
   items-center
   bg-gray-100
   "
