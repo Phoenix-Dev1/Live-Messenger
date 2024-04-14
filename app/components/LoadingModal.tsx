@@ -2,7 +2,7 @@
 
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ClipLoader } from "react-spinners";
+import { ClimbingBoxLoader } from "react-spinners";
 
 const LoadingModal = () => {
   return (
@@ -47,7 +47,7 @@ const LoadingModal = () => {
           "
           >
             <Dialog.Panel>
-              <ClipLoader size={40} color="#0284c7" />
+              <ClimbingBoxLoader size={40} color="#0284c7" />
             </Dialog.Panel>
           </div>
         </div>
