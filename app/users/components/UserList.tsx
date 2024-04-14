@@ -2,15 +2,29 @@
 
 import { User } from "@prisma/client";
 import UserBox from "./UserBox";
+import { HiOutlineBars3 } from "react-icons/hi2";
+import { useState } from "react";
+import SettingsModal from "@/app/components/sidebar/SettingsModal";
+import Avatar from "@/app/components/Avatar";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 interface UserListProps {
   items: User[];
+  currentUser: User;
 }
 
-const UserList: React.FC<UserListProps> = ({ items }) => {
+const UserList: React.FC<UserListProps> = ({ items, currentUser }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <aside
-      className="
+    <>
+      <SettingsModal
+        currentUser={currentUser}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <aside
+        className="
   fixed
   inset-y-0
   pb-20
@@ -25,25 +39,38 @@ const UserList: React.FC<UserListProps> = ({ items }) => {
   w-full
   left-0
   "
-    >
-      <div className="px-5">
-        <div className="flex-col">
-          <div
-            className="
+      >
+        <div className="px-5">
+          <div className="flex-col">
+            <div className="flex justify-between items-center">
+              <div
+                className="
             text-2xl
             font-bold
             text-neutral-800
             py-4
             "
-          >
-            Family
+              >
+                Users & Settings
+              </div>
+              <div
+                onClick={() => setIsModalOpen(true)}
+                className="
+        cursor-pointer
+        hover:opacity-75
+        transition
+        "
+              >
+                <Avatar user={currentUser} />
+              </div>
+            </div>
           </div>
+          {items.map((item) => (
+            <UserBox key={item.id} data={item} />
+          ))}
         </div>
-        {items.map((item) => (
-          <UserBox key={item.id} data={item} />
-        ))}
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

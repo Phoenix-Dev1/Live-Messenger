@@ -16,8 +16,6 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
   const routes = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(currentUser);
-
   return (
     <>
       <SettingsModal
@@ -89,6 +87,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
         transition
         "
           >
+            sfsf
             <Avatar user={currentUser} />
           </div>
         </nav>
