@@ -10,6 +10,14 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Emergency Messages",
   description: "Inner use",
+  icons: [
+    {
+      rel: "icon",
+      type: "image/x-icon",
+      sizes: "32x32",
+      url: "/icon.ico",
+    },
+  ],
 };
 
 export default function RootLayout({
