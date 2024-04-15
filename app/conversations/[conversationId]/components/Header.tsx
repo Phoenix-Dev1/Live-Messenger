@@ -14,7 +14,6 @@ import AvatarGroup from "@/app/components/AvatarGroup";
 
 import ProfileDrawer from "./ProfileDrawer";
 import useActiveList from "@/app/hooks/useActiveList";
-import MediaRoom from "./MediaRoom";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -25,7 +24,6 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isInCall, setIsInCall] = useState(false);
 
   const { members } = useActiveList();
   const isActive = members.indexOf(otherUser?.email!) !== -1;
@@ -37,10 +35,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 
     return isActive ? "Active" : "Offline";
   }, [conversation, isActive]);
-
-  const handleToggleCall = () => {
-    setIsInCall((prev) => !prev);
-  };
 
   return (
     <>
@@ -97,16 +91,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div
-            onClick={handleToggleCall}
-            className=" 
-            text-sky-500
-              cursor-pointer
-            hover:text-sky-600
-              transition"
-          >
-            <HiOutlineVideoCamera size={32} />
-          </div>
           <HiEllipsisHorizontal
             size={32}
             onClick={() => setDrawerOpen(true)}
@@ -119,7 +103,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           />
         </div>
       </div>
-      {isInCall && <MediaRoom />}
     </>
   );
 };
