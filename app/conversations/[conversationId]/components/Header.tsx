@@ -5,11 +5,16 @@ import useOtherUser from "@/app/hooks/useOtherUser";
 import { Conversation, User } from "@prisma/client";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
+import {
+  HiChevronLeft,
+  HiEllipsisHorizontal,
+  HiOutlineVideoCamera,
+} from "react-icons/hi2";
 import AvatarGroup from "@/app/components/AvatarGroup";
 
 import ProfileDrawer from "./ProfileDrawer";
 import useActiveList from "@/app/hooks/useActiveList";
+import MediaRoom from "./MediaRoom";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -20,6 +25,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isInCall, setIsInCall] = useState(false);
 
   const { members } = useActiveList();
   const isActive = members.indexOf(otherUser?.email!) !== -1;
@@ -31,6 +37,10 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 
     return isActive ? "Active" : "Offline";
   }, [conversation, isActive]);
+
+  const handleToggleCall = () => {
+    setIsInCall((prev) => !prev);
+  };
 
   return (
     <>
@@ -86,17 +96,30 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
             </div>
           </div>
         </div>
-        <HiEllipsisHorizontal
-          size={32}
-          onClick={() => setDrawerOpen(true)}
-          className="
+        <div className="flex items-center gap-3">
+          <div
+            onClick={handleToggleCall}
+            className=" 
+            text-sky-500
+              cursor-pointer
+            hover:text-sky-600
+              transition"
+          >
+            <HiOutlineVideoCamera size={32} />
+          </div>
+          <HiEllipsisHorizontal
+            size={32}
+            onClick={() => setDrawerOpen(true)}
+            className="
       text-sky-500
       cursor-pointer
       hover:text-sky-600
       transition
       "
-        />
+          />
+        </div>
       </div>
+      {isInCall && <MediaRoom />}
     </>
   );
 };
