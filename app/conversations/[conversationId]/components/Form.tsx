@@ -81,7 +81,7 @@ const Form = () => {
             transition
           "
         >
-          <HiPaperAirplane size={18} className="text-white" />
+          <HiPaperAirplane size={18} className="text-white rotate-180" />
         </button>
       </form>
     </div>
