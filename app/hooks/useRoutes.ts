@@ -27,9 +27,9 @@ const useRoutes = () => {
       },
       {
         label: "Video",
-        href: "/video-conference",
+        href: "/",
         icon: HiVideoCamera,
-        active: pathname === "/video-conference",
+        active: pathname === "/" /*"/video-conference"*/,
       },
       {
         label: "Logout",
