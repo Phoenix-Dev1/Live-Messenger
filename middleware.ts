@@ -10,6 +10,6 @@ export const config = {
   matcher: [
     "/users/:path*",
     "/conversations/:path*",
-    "/video-conference/:path*",
+    /* "/video-conference/:path*", */
   ],
 };
