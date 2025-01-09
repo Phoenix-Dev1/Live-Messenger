@@ -8,7 +8,7 @@ import ActiveStatus from "./components/ActiveStatus";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Emergency Messages",
+  title: "Live Messenger",
   description: "Inner use",
   icons: [
     {
