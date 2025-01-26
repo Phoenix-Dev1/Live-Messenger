@@ -38,8 +38,8 @@ const AuthForm = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       name: "",
-      email: "visit@mail.co.il",
-      password: "1234",
+      email: "",
+      password: "",
     },
   });
 
