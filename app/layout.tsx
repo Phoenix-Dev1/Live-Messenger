@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Live Messenger",
-  description: "Inner use",
+  description: "Portfolio use",
   icons: [
     {
       rel: "icon",

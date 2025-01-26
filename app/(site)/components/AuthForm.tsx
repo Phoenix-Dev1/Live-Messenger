@@ -38,8 +38,8 @@ const AuthForm = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       name: "",
-      email: "",
-      password: "",
+      email: "visit@mail.co.il",
+      password: "1234",
     },
   });
 
@@ -140,7 +140,6 @@ const AuthForm = () => {
             </Button>
           </div>
         </form>
-
         <div className="mt-6">
           <div className="relative">
             <div
@@ -159,10 +158,14 @@ const AuthForm = () => {
             </div>
             <div
               className="relative 
-            flex 
+            flex
+            flex-col
+            gap-2 
+            text-center
             justify-center 
             text-sm"
             >
+              <span>visit@mail.co.il | 1234</span>
               <span
                 className="
               bg-white 
