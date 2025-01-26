@@ -21,7 +21,7 @@ bg-gray-100
           Welcome To Live Messenger
         </p>
         <p className="mt-2 text-sm text-gray-600">
-          Select a user from the list to begin your conversation!
+          Select a user from the list to begin your conversation.
         </p>
       </div>
     </div>
