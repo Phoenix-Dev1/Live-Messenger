@@ -4,7 +4,7 @@ A real-time messaging app with secure authentication, live user presence, and me
 
 Project Live at: https://live-messenger.vercel.app/
 
-![live-messenger](assets/banner-msg.png)
+![live-messenger](https://github.com/Phoenix-Dev1/Live-Messenger/blob/main/public/assets/banner-msg.png)
 
 ---
 
