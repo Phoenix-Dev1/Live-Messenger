@@ -1,4 +1,4 @@
-# Screenshot
+# Intro
 
 A real-time messaging app with secure authentication, live user presence, and media sharing, built with Next.js, Prisma, Pusher, and Cloudinary for a seamless chat experience.
 
