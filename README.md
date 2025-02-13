@@ -10,11 +10,11 @@ Project Live at: https://live-messenger.vercel.app/
 
 ## Features
 
-- Real-Time Messaging: Instantly send and receive messages using Pusher for seamless live chat.
-- User Authentication: Secure login via NextAuth.js, supporting GitHub & Google OAuth and email authentication.
-- Presence Detection: Track active users in real-time with Pusher's presence channels.
-- Secure Conversations: Ensures privacy with server-side authentication and protected API routes.
-- Optimized Performance: Leverages Next.js for fast loading, server-side rendering, and API efficiency.
+- **Real-Time Messaging**: Instantly send and receive messages using Pusher for seamless live chat.
+- **User Authentication**: Secure login via NextAuth.js, supporting GitHub & Google OAuth and email authentication.
+- **Presence Detection**: Track active users in real-time with Pusher's presence channels.
+- **Secure Conversations**: Ensures privacy with server-side authentication and protected API routes.
+- **Optimized Performance**: Leverages Next.js for fast loading, server-side rendering, and API efficiency.
 
 ---
 
