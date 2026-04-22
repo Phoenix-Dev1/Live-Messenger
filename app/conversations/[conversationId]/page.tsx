@@ -5,12 +5,23 @@ import EmptyState from "@/app/components/EmptyState";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Form from "./components/Form";
+import MediaRoom from "@/app/components/MediaRoom";
 
 interface IParams {
   conversationId: string;
 }
 
-const ConversationId = async ({ params }: { params: IParams }) => {
+interface ISearchParams {
+  video?: boolean;
+}
+
+const ConversationId = async ({ 
+  params,
+  searchParams
+}: { 
+  params: IParams,
+  searchParams: ISearchParams
+}) => {
   const conversation = await getConversationById(params.conversationId);
   const messages = await getMessages(params.conversationId);
   const currentUser = await getCurrentUser();
@@ -29,8 +40,18 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     <div className="lg:pl-80 h-full">
       <div className="h-full flex flex-col">
         <Header conversation={conversation} />
-        <Body initialMessages={messages} />
-        <Form currentUser={currentUser} />
+        {searchParams.video ? (
+          <MediaRoom 
+            chatId={conversation.id}
+            video={true}
+            audio={true}
+          />
+        ) : (
+          <>
+            <Body initialMessages={messages} />
+            <Form currentUser={currentUser} />
+          </>
+        )}
       </div>
     </div>
   );

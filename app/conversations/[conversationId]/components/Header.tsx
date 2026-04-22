@@ -12,6 +12,7 @@ import {
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from "./ProfileDrawer";
 import useActiveList from "@/app/hooks/useActiveList";
+import ChatVideoButton from "./ChatVideoButton";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -89,16 +90,17 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ChatVideoButton />
           <HiEllipsisHorizontal
             size={32}
             onClick={() => setDrawerOpen(true)}
             className="
-      text-sky-500
-      cursor-pointer
-      hover:text-sky-600
-      transition
-      "
+              text-sky-500
+              cursor-pointer
+              hover:text-sky-600
+              transition
+            "
           />
         </div>
       </div>
