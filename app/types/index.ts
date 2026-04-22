@@ -4,7 +4,9 @@ export type FullMessageType = Message & {
   sender: User;
   seen: User[];
   temporaryId?: string;
+  updatedAt: Date;
 };
+
 
 
 export type FullConversationType = Conversation & {

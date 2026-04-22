@@ -14,7 +14,8 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({ initialMessages }) => {
-  const { messages, setMessages, addMessage, updateMessage } = useMessageStore();
+  const { messages, setMessages, addMessage, updateMessage, removeMessage } = useMessageStore();
+
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { conversationId } = useConversation();
@@ -43,15 +44,22 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
       updateMessage(newMessage);
     };
 
+    const deleteMessageHandler = (messageId: string) => {
+      removeMessage(messageId);
+    };
+
     pusherClient.bind("messages:new", messageHandler);
     pusherClient.bind("message:update", updateMessageHandler);
+    pusherClient.bind("message:delete", deleteMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
+      pusherClient.unbind("message:delete", deleteMessageHandler);
     };
-  }, [conversationId, addMessage, updateMessage]);
+  }, [conversationId, addMessage, updateMessage, removeMessage]);
+
 
   return (
     <div className="flex-1 overflow-y-auto">

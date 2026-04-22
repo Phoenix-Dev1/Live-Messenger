@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import useConversation from "@/app/hooks/useConversation";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+import { HiPaperAirplane, HiPhoto, HiXMark } from "react-icons/hi2";
 import { CldUploadButton } from "next-cloudinary";
 import { User } from "@prisma/client";
 import { toast } from "react-hot-toast";
@@ -17,7 +18,7 @@ interface FormProps {
 
 const Form: React.FC<FormProps> = ({ currentUser }) => {
   const { conversationId } = useConversation();
-  const { addMessage, removeMessage } = useMessageStore();
+  const { addMessage, removeMessage, editingMessage, setEditingMessage, updateMessage } = useMessageStore();
 
   const {
     register,
@@ -30,18 +31,42 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
     },
   });
 
+  useEffect(() => {
+    if (editingMessage) {
+      setValue("message", editingMessage.body, { shouldValidate: true });
+    } else {
+      setValue("message", "");
+    }
+  }, [editingMessage, setValue]);
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     const messageValue = data.message;
-    setValue("message", "", { shouldValidate: true });
 
-    if (!currentUser) {
+    if (editingMessage) {
+      axios.patch(`/api/messages/${editingMessage.id}`, {
+        body: messageValue
+      })
+      .then((response) => {
+        updateMessage(response.data);
+        setEditingMessage(null);
+        setValue("message", "", { shouldValidate: true });
+        toast.success("Message updated");
+      })
+      .catch((error) => {
+        console.error(error);
+        const errorMessage = error.response?.data || "Failed to update message";
+        toast.error(errorMessage);
+      });
+
       return;
     }
 
-    // Create a temporary ID for the optimistic message
-    const tempId = `temp-${Date.now()}`;
+    // HANDLE NEW MESSAGE
+    setValue("message", "", { shouldValidate: true });
 
-    // Create the optimistic message object
+    if (!currentUser) return;
+
+    const tempId = `temp-${Date.now()}`;
     const optimisticMessage = {
       id: tempId,
       body: messageValue,
@@ -54,23 +79,18 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
       seen: [],
     };
 
-    // Add to store immediately
     addMessage(optimisticMessage as any);
 
-    axios
-      .post("/api/messages", {
-        ...data,
-        conversationId,
-        temporaryId: tempId,
-      })
-
-      .catch(() => {
-        // If it fails, remove the optimistic message and alert the user
-        removeMessage(tempId);
-        toast.error("Something went wrong!");
-        // Optional: restore the message to the input so the user can try again
-        setValue("message", messageValue);
-      });
+    axios.post("/api/messages", {
+      ...data,
+      conversationId,
+      temporaryId: tempId,
+    })
+    .catch(() => {
+      removeMessage(tempId);
+      toast.error("Something went wrong!");
+      setValue("message", messageValue);
+    });
   };
 
   const handleUpload = (result: any) => {
@@ -81,54 +101,74 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
   };
 
   return (
-    <div
-      className="
-        py-4
-        px-4
-        bg-white
-        border-t
-        flex
-        items-center
-        gap-2
-        lg:gap-4
-        w-full
-      "
-    >
-      <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onSuccess={handleUpload}
-        uploadPreset="ctcojbf8"
+    <div className="relative">
+      {editingMessage && (
+        <div className="absolute bottom-full left-0 w-full bg-sky-50 border-t border-sky-100 py-2 px-4 flex items-center justify-between animate-in slide-in-from-bottom-2 fade-in duration-200">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Editing Message</span>
+            <span className="text-xs text-gray-600 truncate max-w-[300px] italic">
+              "{editingMessage.body}"
+            </span>
+          </div>
+          <button 
+            onClick={() => setEditingMessage(null)}
+            className="text-gray-400 hover:text-gray-600 transition p-1"
+          >
+            <HiXMark size={20} />
+          </button>
+        </div>
+      )}
+      <div
+        className="
+          py-4
+          px-4
+          bg-white
+          border-t
+          flex
+          items-center
+          gap-2
+          lg:gap-4
+          w-full
+        "
       >
-        <HiPhoto size={30} className="text-sky-500" />
-      </CldUploadButton>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex items-center gap-2 lg:gap-4 w-full"
-      >
-        <MessageInput
-          id="message"
-          register={register}
-          errors={errors}
-          required
-          placeholder="Write a message"
-        />
-        <button
-          type="submit"
-          className="
-            rounded-full
-            p-2
-            bg-sky-500
-            cursor-pointer
-            hover:bg-sky-600
-            transition
-          "
+        <CldUploadButton
+          options={{ maxFiles: 1 }}
+          onSuccess={handleUpload}
+          uploadPreset="ctcojbf8"
         >
-          <HiPaperAirplane size={18} className="text-white rotate-180" />
-        </button>
-      </form>
+          <HiPhoto size={30} className="text-sky-500" />
+        </CldUploadButton>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex items-center gap-2 lg:gap-4 w-full"
+        >
+          <MessageInput
+            id="message"
+            register={register}
+            errors={errors}
+            required
+            placeholder={editingMessage ? "Edit message" : "Write a message"}
+          />
+          <button
+            type="submit"
+            className="
+              rounded-full
+              p-2
+              bg-sky-500
+              cursor-pointer
+              hover:bg-sky-600
+              transition
+              flex-shrink-0
+            "
+          >
+            <HiPaperAirplane size={18} className="text-white rotate-180" />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default Form;
+
 

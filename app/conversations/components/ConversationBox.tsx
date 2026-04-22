@@ -69,18 +69,18 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       onClick={handleClick}
       className={clsx(
         `
-  w-full
-  relative
-  flex
-  items-center
-  space-x-3
-  hover:bg-neutral-100
-  rounded-lg
-  transition
-  cursor-pointer
-  p-3
-  `,
-        selected ? "bg-neutral-100" : "bg-white"
+        w-full
+        relative
+        flex
+        items-center
+        space-x-3
+        hover:bg-neutral-100
+        rounded-lg
+        transition
+        cursor-pointer
+        p-3
+        `,
+        selected ? "bg-neutral-100" : hasSeen ? "bg-white" : "bg-sky-50/50"
       )}
     >
       {data.isGroup ? (
@@ -99,40 +99,54 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
             "
           >
             <p
-              className="
-            text-md
-            font-medium
-            text-gray-900
-            "
+              className={clsx(
+                "text-md font-medium text-gray-900",
+                !hasSeen && "font-bold"
+              )}
             >
               {data.name || otherUser.name}
             </p>
             {lastMessage?.createdAt && (
               <p
-                className="
-              text-xs
-              text-gray-400
-              font-light
-              "
+                className={clsx(
+                  "text-xs font-light",
+                  hasSeen ? "text-gray-400" : "text-sky-600 font-semibold"
+                )}
               >
                 {format(new Date(lastMessage.createdAt), "p")}
               </p>
             )}
           </div>
-          <p
-            className={clsx(
-              `
-          truncate
-          text-sm
-          `,
-              hasSeen ? "text-gray-500" : "text-black font-medium"
+          <div className="flex items-center justify-between gap-2">
+            <p
+              className={clsx(
+                `
+                truncate
+                text-sm
+                `,
+                hasSeen ? "text-gray-500 font-normal" : "text-gray-900 font-semibold"
+              )}
+            >
+              {lastMessageText}
+            </p>
+            {!hasSeen && (
+              <div
+                className="
+                  w-2.5 
+                  h-2.5 
+                  bg-sky-500 
+                  rounded-full 
+                  flex-shrink-0
+                  shadow-sm
+                  animate-pulse
+                "
+              />
             )}
-          >
-            {lastMessageText}
-          </p>
+          </div>
         </div>
       </div>
     </div>
+
   );
 };
 

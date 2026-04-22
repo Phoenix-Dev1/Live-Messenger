@@ -3,15 +3,21 @@ import { FullMessageType } from "@/app/types";
 
 interface MessageStore {
   messages: FullMessageType[];
+  editingMessage: FullMessageType | null;
   setMessages: (messages: FullMessageType[]) => void;
   addMessage: (message: FullMessageType) => void;
   removeMessage: (messageId: string) => void;
+  deleteMessage: (messageId: string) => void;
   updateMessage: (message: FullMessageType) => void;
+  setEditingMessage: (message: FullMessageType | null) => void;
 }
+
 
 const useMessageStore = create<MessageStore>((set) => ({
   messages: [],
+  editingMessage: null,
   setMessages: (messages) => set({ messages }),
+  setEditingMessage: (message) => set({ editingMessage: message }),
   addMessage: (message) =>
     set((state) => {
       // 1. Check if the incoming message has a temporaryId that matches an existing one
