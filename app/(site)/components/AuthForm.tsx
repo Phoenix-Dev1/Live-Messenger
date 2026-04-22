@@ -7,6 +7,7 @@ import { BsGithub, BsGoogle } from "react-icons/bs";
 import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
 import AuthSocialButton from "./AuthSocialButton";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 import toast from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -36,6 +37,7 @@ const AuthForm = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [shake, setShake] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   useEffect(() => {
     if (session?.status === "authenticated") {
@@ -58,7 +60,7 @@ const AuthForm = () => {
     defaultValues: {
       name: "",
       email: "visit@mail.co.il",
-      password: "1234",
+      password: "RedDawnCoffee34!",
     },
   });
 
@@ -122,6 +124,10 @@ const AuthForm = () => {
 
   return (
     <div className="relative w-full">
+      <ForgotPasswordModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+      />
       <AnimatePresence>
         {isSuccess && (
           <motion.div
@@ -229,19 +235,34 @@ const AuthForm = () => {
 
         <motion.div
           variants={itemVariants}
-          className="flex gap-2 justify-start text-sm mt-8 text-ash-500 font-medium"
+          className="flex flex-col gap-2 mt-8 text-sm text-ash-500 font-medium"
         >
-          <div>
-            {variant === "LOGIN" ? "New here?" : "Already registered?"}
+          <div className="flex gap-2 justify-start">
+            <div>
+              {variant === "LOGIN" ? "New here?" : "Already registered?"}
+            </div>
+            <button
+              type="button"
+              onClick={toggleVariant}
+              disabled={isLoading || isSuccess}
+              className="text-ash-900 font-bold hover:underline underline-offset-4 disabled:opacity-50"
+            >
+              {variant === "LOGIN" ? "Create an account" : "Sign in"}
+            </button>
           </div>
-          <button 
-            type="button"
-            onClick={toggleVariant} 
-            disabled={isLoading || isSuccess}
-            className="text-ash-900 font-bold hover:underline underline-offset-4 disabled:opacity-50"
-          >
-            {variant === "LOGIN" ? "Create an account" : "Sign in"}
-          </button>
+
+          {variant === "LOGIN" && (
+            <div className="flex gap-2 justify-start">
+              <button
+                type="button"
+                onClick={() => setIsResetModalOpen(true)}
+                disabled={isLoading || isSuccess}
+                className="text-ash-500 font-bold hover:text-ash-900 hover:underline underline-offset-4 transition-colors disabled:opacity-50"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>
