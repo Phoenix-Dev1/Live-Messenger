@@ -56,10 +56,13 @@ const UserList: React.FC<UserListProps> = ({ items, currentUser }) => {
           lg:block
           overflow-y-auto
           border-r
-          border-gray-200
+          border-ash-200
+          bg-white/80
+          backdrop-blur-xl
           block
           w-full
           left-0
+          shadow-sm
         "
       >
         <div className="px-5">
@@ -69,11 +72,11 @@ const UserList: React.FC<UserListProps> = ({ items, currentUser }) => {
                 className="
                   text-2xl
                   font-bold
-                  text-neutral-800
-                  py-4
+                  text-ash-900
+                  py-6
                 "
               >
-                Users & Settings
+                Directory
               </div>
               <div
                 onClick={() => setIsModalOpen(true)}
@@ -90,10 +93,12 @@ const UserList: React.FC<UserListProps> = ({ items, currentUser }) => {
 
           {/* Render grouped users */}
           {sortedKeys.map((key) => (
-            <div key={key} className="mb-6">
-              <div className="text-lg font-bold text-gray-700 mb-2">{key}</div>
-              <div className="space-y-2">
-                <div className="h-[1px] w-[90%] m-auto bg-gray-500 my-4"></div>
+            <div key={key} className="mb-8">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="text-xs font-bold text-ash-400 uppercase tracking-widest">{key}</div>
+                <div className="h-px bg-ash-100 flex-1"></div>
+              </div>
+              <div className="space-y-1">
                 {groupedUsers[key].map((user) => (
                   <UserBox key={user.id} data={user} />
                 ))}

@@ -23,7 +23,7 @@ export default function Home() {
             </svg>
           </div>
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-ash-900 mb-8 text-center">
-            Access Portal
+            Ready for dustoff.
           </h2>
           <AuthForm />
         </div>

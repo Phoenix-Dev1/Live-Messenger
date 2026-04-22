@@ -39,7 +39,7 @@ const MobileItem: React.FC<MobileItemProps> = ({
         transition-colors
         duration-300
         `,
-        active ? "text-ash-50" : "text-ash-500 hover:text-ash-100"
+        active ? "text-[#60a5fa]" : "text-slate-400 hover:text-white"
       )}
     >
       <motion.div
@@ -51,7 +51,7 @@ const MobileItem: React.FC<MobileItemProps> = ({
       {active && (
         <motion.div
           layoutId="mobile-active-indicator"
-          className="absolute top-0 inset-x-0 h-[2px] bg-forest-500"
+          className="absolute top-0 inset-x-0 h-[2px] bg-[#3b82f6]"
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
       )}

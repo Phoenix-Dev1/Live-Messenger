@@ -2,7 +2,8 @@
 
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ClimbingBoxLoader } from "react-spinners";
+import { CgSpinner } from "react-icons/cg";
+import { motion } from "framer-motion";
 
 const LoadingModal = () => {
   return (
@@ -21,8 +22,8 @@ const LoadingModal = () => {
             className="
               fixed
               inset-0
-              bg-gray-100
-              bg-opacity-50
+              bg-ash-50/80
+              backdrop-blur-sm
               transition-opacity
             "
           />
@@ -46,9 +47,25 @@ const LoadingModal = () => {
             text-center
           "
           >
-            <Dialog.Panel>
-              <ClimbingBoxLoader size={40} color="#0284c7" />
-            </Dialog.Panel>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <Dialog.Panel>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  className="text-[#3b82f6]"
+                >
+                  <CgSpinner size={48} />
+                </motion.div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
         </div>
       </Dialog>

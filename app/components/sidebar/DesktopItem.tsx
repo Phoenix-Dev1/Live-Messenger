@@ -40,7 +40,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           duration-300
           relative
           `,
-          active ? "text-ash-50" : "text-ash-500 hover:text-ash-100"
+          active ? "text-[#60a5fa]" : "text-slate-400 hover:text-white"
         )}
       >
         <motion.div
@@ -55,7 +55,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
       {active && (
         <motion.div
           layoutId="sidebar-active-indicator"
-          className="absolute inset-y-0 right-0 w-1 bg-forest-500"
+          className="absolute inset-y-0 right-0 w-1 bg-[#3b82f6]"
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
         />
       )}
