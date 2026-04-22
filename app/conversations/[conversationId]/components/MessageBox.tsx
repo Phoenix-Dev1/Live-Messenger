@@ -116,16 +116,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
       <div className={body}>
         <div className="flex items-center gap-1">
           <div className="text-sm text-gray-500">{data.sender.name}</div>
-          <div className="text-xs text-gray-400">
-            {format(new Date(data.createdAt), "p")}
-            {isEdited && (
-              <span className="ml-1 opacity-60 text-[10px]">(edited)</span>
-            )}
-          </div>
         </div>
         <div className="flex items-center gap-2">
           {isOwn && (
-            <div
+            <div 
               className={clsx(
                 "flex items-center gap-2 transition-all duration-200 flex-shrink-0",
                 showActions ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 pointer-events-none"
@@ -154,9 +148,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
               </button>
             </div>
           )}
-          <div
+          <div 
             onClick={() => isOwn && setShowActions(!showActions)}
-            className={message}
+            className={clsx(message, "relative group/msg")}
           >
             <ImageModal
               src={data.image}
@@ -166,19 +160,43 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
               onDelete={() => setIsDeleteModalOpen(true)}
             />
             {data.image ? (
-              <Image
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setImageModalOpen(true);
-                }}
-                alt="Image"
-                height={288}
-                width={288}
-                src={data.image}
-                className="object-cover cursor-pointer hover:scale-110 transition translate"
-              />
+              <div className="relative">
+                <Image
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setImageModalOpen(true);
+                  }}
+                  alt="Image"
+                  height={288}
+                  width={288}
+                  src={data.image}
+                  className="object-cover cursor-pointer hover:scale-105 transition translate"
+                />
+                {/* Time overlay for images */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/40 backdrop-blur-sm">
+                  <span className="text-[10px] text-white/90">
+                    {format(new Date(data.createdAt), "p")}
+                  </span>
+                  {isEdited && (
+                    <span className="text-[9px] text-white/60">edited</span>
+                  )}
+                </div>
+              </div>
             ) : (
-              <div>{data.body}</div>
+              <div className="flex flex-col min-w-[60px]">
+                <div className="pr-1 break-words">{data.body}</div>
+                <div className={clsx(
+                  "flex items-center justify-end gap-1 -mt-1.5 ml-auto pt-0.5",
+                  isOwn ? "text-white/70" : "text-gray-400"
+                )}>
+                  <span className="text-[10px]">
+                    {format(new Date(data.createdAt), "p")}
+                  </span>
+                  {isEdited && (
+                    <span className="text-[9px] opacity-80">edited</span>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>
