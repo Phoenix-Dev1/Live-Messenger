@@ -24,12 +24,15 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
       message: "",
     },
   });
+
+  const messageValue = watch("message");
 
   useEffect(() => {
     if (editingMessage) {
@@ -40,11 +43,11 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
   }, [editingMessage, setValue]);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const messageValue = data.message;
+    const val = data.message;
 
     if (editingMessage) {
       axios.patch(`/api/messages/${editingMessage.id}`, {
-        body: messageValue
+        body: val
       })
       .then((response) => {
         updateMessage(response.data);
@@ -69,7 +72,7 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
     const tempId = `temp-${Date.now()}`;
     const optimisticMessage = {
       id: tempId,
-      body: messageValue,
+      body: val,
       image: null,
       createdAt: new Date(),
       seenIds: [],
@@ -89,7 +92,7 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
     .catch(() => {
       removeMessage(tempId);
       toast.error("Something went wrong!");
-      setValue("message", messageValue);
+      setValue("message", val);
     });
   };
 
@@ -147,6 +150,7 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
             register={register}
             errors={errors}
             required
+            value={messageValue}
             placeholder={editingMessage ? "Edit message" : "Write a message"}
           />
           <button

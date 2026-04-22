@@ -31,6 +31,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
 
   const { removeMessage, setEditingMessage } = useMessageStore();
 
+  const [isExpired, setIsExpired] = useState(false);
+
   const isOwn = session?.data?.user?.email === data?.sender?.email;
   const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
@@ -38,10 +40,30 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
     .join(", ");
 
   const canEdit = useMemo(() => {
-    if (!isOwn || !!data.image) return false;
+    if (!isOwn || !!data.image || isExpired) return false;
     const createdAt = new Date(data.createdAt).getTime();
     const now = new Date().getTime();
     return now - createdAt < EDIT_TIME_LIMIT;
+  }, [isOwn, data.createdAt, data.image, isExpired]);
+
+  useEffect(() => {
+    if (!isOwn || !!data.image) return;
+
+    const createdAt = new Date(data.createdAt).getTime();
+    const expiryTime = createdAt + EDIT_TIME_LIMIT;
+    const now = new Date().getTime();
+    const timeLeft = expiryTime - now;
+
+    if (timeLeft <= 0) {
+      setIsExpired(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setIsExpired(true);
+    }, timeLeft);
+
+    return () => clearTimeout(timer);
   }, [isOwn, data.createdAt, data.image]);
 
   const isEdited = useMemo(() => {
@@ -174,7 +196,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
                   className="object-cover cursor-pointer hover:scale-105 transition translate"
                 />
                 {/* Time overlay for images */}
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/40 backdrop-blur-sm">
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/40 backdrop-blur-sm whitespace-nowrap">
                   <span className="text-[10px] text-white/90">
                     {format(new Date(data.createdAt), "p")}
                   </span>
@@ -184,17 +206,21 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col min-w-[60px]">
-                <div className="pr-1 break-words">{data.body}</div>
+              <div className="flex flex-col min-w-[75px]">
+                <div dir="auto" className="break-words leading-normal pr-2">
+                  {data.body}
+                </div>
                 <div className={clsx(
-                  "flex items-center justify-end gap-1 -mt-1.5 ml-auto pt-0.5",
-                  isOwn ? "text-white/70" : "text-gray-400"
+                  "flex items-center justify-end gap-1.5 mt-1 ml-auto whitespace-nowrap",
+                  isOwn ? "text-white/80" : "text-gray-500"
                 )}>
-                  <span className="text-[10px]">
+                  <span className="text-[10px] font-medium">
                     {format(new Date(data.createdAt), "p")}
                   </span>
                   {isEdited && (
-                    <span className="text-[9px] opacity-80">edited</span>
+                    <span className="text-[9px] opacity-70 italic">
+                      edited
+                    </span>
                   )}
                 </div>
               </div>
