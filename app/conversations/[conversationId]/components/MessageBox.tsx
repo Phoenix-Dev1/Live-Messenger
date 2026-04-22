@@ -125,6 +125,16 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
       .finally(() => setIsLoading(false));
   };
 
+  if (data.isSystem) {
+    return (
+      <div className="flex justify-center w-full my-4">
+        <div className="bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-[11px] px-4 py-1.5 rounded-full font-medium shadow-sm border border-neutral-200/50 uppercase tracking-wider">
+          {data.body}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className={container}>
       <DeleteMessageModal
