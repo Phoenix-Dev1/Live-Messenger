@@ -15,6 +15,10 @@ import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from "./ProfileDrawer";
 import useActiveList from "@/app/hooks/useActiveList";
 
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+
 interface HeaderProps {
   conversation: Conversation & {
     users: User[];
@@ -23,7 +27,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation);
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { members } = useActiveList();
   const isActive = members.indexOf(otherUser?.email!) !== -1;
@@ -35,6 +41,23 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 
     return isActive ? "Active" : "Offline";
   }, [conversation, isActive]);
+
+  const onVideoCall = () => {
+    setIsLoading(true);
+
+    axios.post("/api/daily/room")
+      .then((response) => {
+        const { name, url } = response.data;
+        // Redirect to the meeting page with the room name and encoded URL
+        router.push(`/meeting/${name}?url=${encodeURIComponent(url)}`);
+      })
+      .catch(() => {
+        toast.error("Failed to start video call");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -90,7 +113,21 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={onVideoCall}
+            disabled={isLoading}
+            className="
+              text-sky-500 
+              hover:text-sky-600 
+              transition 
+              cursor-pointer
+              disabled:opacity-50
+              disabled:cursor-default
+            "
+          >
+            <HiOutlineVideoCamera size={28} />
+          </button>
           <HiEllipsisHorizontal
             size={32}
             onClick={() => setDrawerOpen(true)}
@@ -106,5 +143,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
     </>
   );
 };
+
 
 export default Header;

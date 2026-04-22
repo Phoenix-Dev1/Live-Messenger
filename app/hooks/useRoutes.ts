@@ -26,10 +26,10 @@ const useRoutes = () => {
         active: pathname === "/users",
       },
       {
-        label: "Video",
-        href: "/",
+        label: "Meetings",
+        href: "/meetings",
         icon: HiVideoCamera,
-        active: pathname === "/" /*"/video-conference"*/,
+        active: pathname === "/meetings",
       },
       {
         label: "Logout",
