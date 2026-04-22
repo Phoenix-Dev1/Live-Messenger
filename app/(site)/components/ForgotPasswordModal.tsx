@@ -60,7 +60,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-6 border-b border-ash-200 pb-8">
+        <div className="space-y-6 pb-8">
           <div>
             <h2 className="text-2xl font-bold text-ash-900 mb-2">
               Reset Password

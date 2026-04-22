@@ -253,11 +253,12 @@ const AuthForm = () => {
 
           {variant === "LOGIN" && (
             <div className="flex gap-2 justify-start">
+              <div>Oh snap!</div>
               <button
                 type="button"
                 onClick={() => setIsResetModalOpen(true)}
                 disabled={isLoading || isSuccess}
-                className="text-ash-500 font-bold hover:text-ash-900 hover:underline underline-offset-4 transition-colors disabled:opacity-50"
+                className="text-ash-900 font-bold hover:underline underline-offset-4 disabled:opacity-50"
               >
                 Forgot Password?
               </button>
