@@ -31,12 +31,16 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const joinedDate = useMemo(() => {
+    if (!otherUser?.createdAt) {
+      return null;
+    }
+
     return format(new Date(otherUser.createdAt), "PP");
-  }, [otherUser.createdAt]);
+  }, [otherUser?.createdAt]);
 
   const title = useMemo(() => {
-    return data.name || otherUser.name;
-  }, [data.name, otherUser.name]);
+    return data.name || otherUser?.name;
+  }, [data.name, otherUser?.name]);
 
   const statusText = useMemo(() => {
     if (data.isGroup) {
@@ -293,7 +297,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 sm:col-span-2
                                 "
                                   >
-                                    {otherUser.email}
+                                    {otherUser?.email}
                                   </dd>
                                 </div>
                               )}
@@ -320,9 +324,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:col-span-2
                                   "
                                     >
-                                      <time dateTime={joinedDate}>
-                                        {joinedDate}
-                                      </time>
+                                      {joinedDate && (
+                                        <time dateTime={joinedDate}>
+                                          {joinedDate}
+                                        </time>
+                                      )}
                                     </dd>
                                   </div>
                                 </>

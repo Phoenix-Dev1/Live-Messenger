@@ -102,8 +102,9 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
                 label="members"
                 options={users.map((user) => ({
                   value: user.id,
-                  label: user.name,
+                  label: user.name || "Unknown User",
                 }))}
+
                 onChange={(value) =>
                   setValue("members", value, {
                     shouldValidate: true,

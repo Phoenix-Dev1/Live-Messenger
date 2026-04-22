@@ -104,8 +104,9 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
                 !hasSeen && "font-bold"
               )}
             >
-              {data.name || otherUser.name}
+              {data.name || otherUser?.name}
             </p>
+
             {lastMessage?.createdAt && (
               <p
                 className={clsx(

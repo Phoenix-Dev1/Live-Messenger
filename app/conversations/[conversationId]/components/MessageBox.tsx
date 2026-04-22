@@ -148,8 +148,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
       </div>
       <div className={body}>
         <div className="flex items-center gap-1">
-          <div className="text-sm text-gray-500">{data.sender.name}</div>
+          <div className="text-sm text-gray-500">{data.sender?.name}</div>
         </div>
+
         <div className="flex items-center gap-2">
           {isOwn && (
             <div 
