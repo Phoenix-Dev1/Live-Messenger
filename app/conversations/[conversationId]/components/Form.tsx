@@ -5,11 +5,19 @@ import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { CldUploadButton } from "next-cloudinary";
+import { User } from "@prisma/client";
+import { toast } from "react-hot-toast";
 
 import MessageInput from "./MessageInput";
+import useMessageStore from "@/app/hooks/useMessageStore";
 
-const Form = () => {
+interface FormProps {
+  currentUser: User | null;
+}
+
+const Form: React.FC<FormProps> = ({ currentUser }) => {
   const { conversationId } = useConversation();
+  const { addMessage, removeMessage } = useMessageStore();
 
   const {
     register,
@@ -23,12 +31,46 @@ const Form = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const messageValue = data.message;
     setValue("message", "", { shouldValidate: true });
 
-    axios.post("/api/messages", {
-      ...data,
-      conversationId,
-    });
+    if (!currentUser) {
+      return;
+    }
+
+    // Create a temporary ID for the optimistic message
+    const tempId = `temp-${Date.now()}`;
+
+    // Create the optimistic message object
+    const optimisticMessage = {
+      id: tempId,
+      body: messageValue,
+      image: null,
+      createdAt: new Date(),
+      seenIds: [],
+      conversationId: conversationId,
+      senderId: currentUser.id,
+      sender: currentUser,
+      seen: [],
+    };
+
+    // Add to store immediately
+    addMessage(optimisticMessage as any);
+
+    axios
+      .post("/api/messages", {
+        ...data,
+        conversationId,
+        temporaryId: tempId,
+      })
+
+      .catch(() => {
+        // If it fails, remove the optimistic message and alert the user
+        removeMessage(tempId);
+        toast.error("Something went wrong!");
+        // Optional: restore the message to the input so the user can try again
+        setValue("message", messageValue);
+      });
   };
 
   const handleUpload = (result: any) => {
@@ -89,3 +131,4 @@ const Form = () => {
 };
 
 export default Form;
+

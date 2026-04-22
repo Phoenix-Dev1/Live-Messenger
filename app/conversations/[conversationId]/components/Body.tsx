@@ -1,24 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
+import { useEffect, useRef } from "react";
 import useConversation from "@/app/hooks/useConversation";
 import { FullMessageType } from "@/app/types";
-
 import MessageBox from "./MessageBox";
 import axios from "axios";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
+import useMessageStore from "@/app/hooks/useMessageStore";
 
 interface BodyProps {
   initialMessages: FullMessageType[];
 }
 
 const Body: React.FC<BodyProps> = ({ initialMessages }) => {
-  const [messages, setMessages] = useState(initialMessages);
+  const { messages, setMessages, addMessage, updateMessage } = useMessageStore();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { conversationId } = useConversation();
+
+  useEffect(() => {
+    setMessages(initialMessages);
+  }, [initialMessages, setMessages]);
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
@@ -31,27 +34,13 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
 
-      setMessages((current) => {
-        if (find(current, { id: message.id })) {
-          return current;
-        }
-
-        return [...current, message];
-      });
+      addMessage(message);
 
       bottomRef?.current?.scrollIntoView();
     };
 
     const updateMessageHandler = (newMessage: FullMessageType) => {
-      setMessages((current) =>
-        current.map((currentMessage) => {
-          if (currentMessage.id === newMessage.id) {
-            return newMessage;
-          }
-
-          return currentMessage;
-        })
-      );
+      updateMessage(newMessage);
     };
 
     pusherClient.bind("messages:new", messageHandler);
@@ -62,7 +51,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
     };
-  }, [conversationId]);
+  }, [conversationId, addMessage, updateMessage]);
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -79,3 +68,4 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
 };
 
 export default Body;
+
