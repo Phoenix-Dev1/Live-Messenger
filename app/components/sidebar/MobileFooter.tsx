@@ -3,6 +3,7 @@
 import useConversation from "@/app/hooks/useConversation";
 import useRoutes from "@/app/hooks/useRoutes";
 import MobileItem from "./MobileItem";
+import { motion } from "framer-motion";
 
 const MobileFooter = () => {
   const routes = useRoutes();
@@ -13,19 +14,22 @@ const MobileFooter = () => {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 200, damping: 25 }}
       className="
-    fixed
-    justify-between
-    w-full
-    bottom-0
-    z-40
-    flex
-    items-center
-    bg-white
-    border-t-[1px]
-    lg:hidden
-    "
+        fixed
+        bottom-0
+        z-40
+        w-full
+        flex
+        items-center
+        bg-ash-950
+        border-t
+        border-ash-900
+        lg:hidden
+      "
     >
       {routes.map((route) => (
         <MobileItem
@@ -36,7 +40,7 @@ const MobileFooter = () => {
           onClick={route.onClick}
         />
       ))}
-    </div>
+    </motion.div>
   );
 };
 

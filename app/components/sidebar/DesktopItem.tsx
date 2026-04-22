@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface DesktopItemProps {
   label: string;
@@ -25,29 +26,39 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   };
 
   return (
-    <li onClick={handleClick}>
+    <li onClick={handleClick} className="w-full relative group cursor-pointer">
       <Link
         href={href}
         className={clsx(
           `
-      group
-      flex
-      gap-x-3
-      rounded-md
-      p-3
-      text-sm
-      leading-6
-      font-semibold
-      text-gray-500
-      hover:text-black
-      hover:bg-gray-100
-      `,
-          active && "bg-gray-100 text-black"
+          flex
+          justify-center
+          p-4
+          text-sm
+          font-semibold
+          transition-all
+          duration-300
+          relative
+          `,
+          active ? "text-ash-50" : "text-ash-500 hover:text-ash-100"
         )}
       >
-        <Icon className="h-6 w-6 shring-0" />
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative z-10"
+        >
+          <Icon className="h-6 w-6 shrink-0" />
+        </motion.div>
         <span className="sr-only">{label}</span>
       </Link>
+      {active && (
+        <motion.div
+          layoutId="sidebar-active-indicator"
+          className="absolute inset-y-0 right-0 w-1 bg-forest-500"
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        />
+      )}
     </li>
   );
 };
