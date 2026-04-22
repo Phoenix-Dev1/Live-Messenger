@@ -107,7 +107,7 @@ const Form: React.FC<FormProps> = ({ currentUser }) => {
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Editing Message</span>
             <span className="text-xs text-gray-600 truncate max-w-[300px] italic">
-              "{editingMessage.body}"
+              &quot;{editingMessage.body}&quot;
             </span>
           </div>
           <button 

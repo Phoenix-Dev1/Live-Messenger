@@ -14,6 +14,8 @@ import { toast } from "react-hot-toast";
 import useMessageStore from "@/app/hooks/useMessageStore";
 import DeleteMessageModal from "./DeleteMessageModal";
 
+const EDIT_TIME_LIMIT = 5 * 60 * 1000; // 5 minutes
+
 interface MessageBoxProps {
   data: FullMessageType;
   isLast?: boolean;
@@ -35,7 +37,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
     .map((user) => user.name)
     .join(", ");
 
-  const EDIT_TIME_LIMIT = 5 * 60 * 1000; // 5 minutes
   const canEdit = useMemo(() => {
     if (!isOwn || !!data.image) return false;
     const createdAt = new Date(data.createdAt).getTime();
