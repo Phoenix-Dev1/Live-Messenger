@@ -26,12 +26,6 @@ const useRoutes = () => {
         active: pathname === "/users",
       },
       {
-        label: "Meetings",
-        href: "/meetings",
-        icon: HiVideoCamera,
-        active: pathname === "/meetings",
-      },
-      {
         label: "Logout",
         href: "#",
         onClick: () => signOut(),
