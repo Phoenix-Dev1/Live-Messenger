@@ -76,7 +76,7 @@ const UserList: React.FC<UserListProps> = ({ items, currentUser }) => {
                   py-6
                 "
               >
-                Directory
+                Start a chat
               </div>
               <div
                 onClick={() => setIsModalOpen(true)}
